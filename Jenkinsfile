@@ -19,14 +19,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
 
         stage('Code Analysis - SonarQube') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=spring-jenkins-sonar'
+                    bat 'mvn sonar:sonar -Dsonar.projectKey=spring-jenkins-sonar'
                 }
             }
         }
