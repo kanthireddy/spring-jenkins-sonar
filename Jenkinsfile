@@ -25,7 +25,7 @@ pipeline {
           stage('Code Analysis - SonarQube') { 
             steps { 
                 withSonarQubeEnv("${SONARQUBE_SERVER}") { 
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=springboot-jenkins-sonarqube-demo' 
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=spring-jenkins-sonar' 
                 } 
             } 
         }
