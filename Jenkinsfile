@@ -24,11 +24,10 @@ pipeline {
         }
 
         stage('Code Analysis - SonarQube') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    bat 'mvn sonar:sonar -Dsonar.projectKey=spring-jenkins-sonar'
-                }
-            }
+             steps { 
+                waitForQualityGate abortPipeline: true 
+            } 
+
         }
 
         
