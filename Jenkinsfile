@@ -22,8 +22,15 @@ pipeline {
                 bat 'mvn clean install'
             }
         }
+          stage('Code Analysis - SonarQube') { 
+            steps { 
+                withSonarQubeEnv("${SONARQUBE_SERVER}") { 
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=springboot-jenkins-sonarqube-demo' 
+                } 
+            } 
+        }
 
-        stage('Code Analysis - SonarQube') {
+        stage("Quality Gate") {
              steps { 
                 waitForQualityGate abortPipeline: true 
             } 
