@@ -31,9 +31,10 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 sh '''
-                ansible-playbook -i /home/ubuntu/hosts /home/ubuntu/deploy-maven-app.yml
+  export ANSIBLE_HOST_KEY_CHECKING=False
+  ansible-playbook -i /home/ubuntu/hosts /home/ubuntu/deploy-maven-app.yml
+'''
 
-                '''
             }
         }
     }
