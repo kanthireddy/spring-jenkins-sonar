@@ -31,7 +31,7 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 sh '''
-                ansible-playbook -i  hosts deploy-tomcat.yml
+                ansible-playbook -i  hosts deploy-maven-app.yml
                 '''
             }
         }
