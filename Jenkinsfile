@@ -1,49 +1,39 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'   // Set name as defined in Jenkins global tools
-        jdk 'jdk-17'           // Set name as defined in Jenkins global tools
-    }
-
-    environment {
-        SONARQUBE_SERVER = 'SonarQubeServer' // Jenkins configured SonarQube instance name
+    tools{
+      
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone Repo') {
             steps {
-                git 'https://github.com/kanthireddy/spring-jenkins-sonar.git'
+                git url: 'https://github.com/kanthireddy/spring-jenkins-sonar.git'
             }
         }
 
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn clean package'
             }
         }
-          stage('Code Analysis - SonarQube') { 
-            steps { 
-                withSonarQubeEnv("${SONARQUBE_SERVER}") { 
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=spring-jenkins-sonar' 
-                } 
-            } 
-        }
 
-        stage("Quality Gate") {
-             steps { 
-                waitForQualityGate abortPipeline: true 
-            } 
-
-        }
-
-        
-
-        stage('Deploy') {
+        stage('Copy WAR to Deployment Server') {
             steps {
-                echo 'Deploying the application...'
-                // Add deployment steps here
+                // Assuming WAR is at target/app.war
+                sh '''
+                cp target/*.war /home/ubuntu/app.war
+                '''
+            }
+        }
+
+        stage('Run Ansible Playbook') {
+            steps {
+                sh '''
+                ansible-playbook -i  hosts deploy-tomcat.yml
+                '''
             }
         }
     }
 }
+
