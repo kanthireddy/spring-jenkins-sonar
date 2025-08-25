@@ -31,7 +31,7 @@ pipeline {
     steps {
         sshagent (credentials: ['ansible-key']) {
             sh '''
-                cd /home/ubuntu/ansible-deploy
+                cd /var/lib/jenkins/ansible-deploy
                 ansible-playbook -i hosts.ini deploy_tomcat.yml
             '''
         }
