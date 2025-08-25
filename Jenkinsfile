@@ -29,14 +29,15 @@ pipeline {
 
       stage('Deploy WAR using Ansible') {
     steps {
-        sshagent (credentials: ['ansible-key']) {
+        sshagent (credentials: ['ubuntu']) {
             sh '''
-                cd ansible-deploy
+                cd /home/ubuntu/ansible-deploy
                 ansible-playbook -i hosts.ini deploy_tomcat.yml
             '''
         }
     }
 }
+
     }
 }
 
