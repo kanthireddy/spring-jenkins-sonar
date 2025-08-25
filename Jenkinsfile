@@ -32,7 +32,7 @@ pipeline {
         sshagent (credentials: ['ansible-key']) {
             sh '''
                 cd /var/lib/jenkins/ansible-deploy
-                ansible-playbook -i hosts.ini deploy_tomcat.yml
+                ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts.ini deploy_tomcat.yml
             '''
         }
     }
