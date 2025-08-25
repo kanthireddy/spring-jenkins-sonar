@@ -1,9 +1,16 @@
 pipeline {
     agent any
 
+    
+
     tools{
       maven 'Maven'
       jdk 'JDK'
+    }
+
+    environment {
+        ANSIBLE_HOST = "ubuntu@34.221.144.250"
+        SSH_KEY_ID = "ansible-key" // Jenkins credentials ID for SSH key
     }
 
     stages {
@@ -19,24 +26,17 @@ pipeline {
             }
         }
 
-        stage('Copy WAR to Deployment Server') {
-            steps {
-                // Assuming WAR is at target/app.war
-                sh '''
-                cp target/*.war /home/ubuntu/app.war
-                '''
-            }
-        }
 
-        stage('Run Ansible Playbook') {
-            steps {
-                sh '''
-  export ANSIBLE_HOST_KEY_CHECKING=False
-  ansible-playbook -i /home/ubuntu/hosts /home/ubuntu/deploy-maven-app.yml
-'''
-
-            }
+      stage('Deploy WAR using Ansible') {
+    steps {
+        sshagent (credentials: ['ansible-key']) {
+            sh '''
+                cd ansible-deploy
+                ansible-playbook -i hosts.ini deploy_tomcat.yml
+            '''
         }
+    }
+}
     }
 }
 
